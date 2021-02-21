@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>java职位爬虫</title>
+    <meta name="renderer" content="webkit">
+    <script type="text/javascript" th:src="@{http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js}"></script>
+    <link rel="stylesheet" href="static/layui/css/layui.css">
+    <link rel="shortcut icon" href="static/images/logo.ico" type="image/x-icon">
+    <script src="static/layui/layui.js"></script>
+    <script src="static/PageJs/commons.min.js"></script>
+    <script src="static/PageJs/index.min.js"></script>
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=PH99jOPkhiKotf62aCFi2iGzUFcAfLiZ"></script>
+    <script src="static/PageJs/echarts.min.js"></script>
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2346267_jri5z9pnbcf.css">
+    <!-- hot word  -->
+    <link href="static/css/jqcloud.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jqcloud/1.0.4/jqcloud-1.0.4.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+    <style>
+        html{
+            background-image: url(static/images/index.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .title-pos,salary-pos,scale-pos,build-date-pos,requirement-pos,link-pos{
+            text-align: center;
+        }
+        .article-list .item__date {
+            position: absolute;
+            background-color: #7266BA;
+            color: #fff;
+            height: 70px;
+            width: 70px;
+            font-size: 12px;
+            top: -20px;
+            border-radius: 35px;
+            left: -20px;
+            text-align: center;
+            padding-top: 9px;
+            box-sizing: border-box;
+        }
+        p{
+            font-family: 仿宋;
+            color: lightgreen;
+        }
+        time{
+            float: right; position: relative; bottom: 7px;
+        }
+        ::-webkit-scrollbar {/*隐藏滚轮*/
+            display: none;
+        }
+        .layui-card{
+            background-color: rgba(0,0,0,0.43)!important;
+        }
+        .layui-card-header{
+            color: white;
+        }
+        .icon-tag,.layui-icon-time,.link{
+            color: white;
+        }
+        .layui-timeline p{
+            color: white;
+        }
+        .container-online form{
+            background-color: white;
+            padding-top: 26px;
+            padding-bottom: 2px;
+        }
+        .spider-man{
+            width: 70px;
+            position: relative;
+            top: 29px;
+            right: 26px;
+        }
+        /* 动态数据库搜素框 */
+        .bar7 form {
+            height: 42px;
+        }
+        .bar7 input {
+            width: 250px;
+            border-radius: 42px;
+            border: 2px solid #324B4E;
+            background: #F9F0DA;
+            transition: .3s linear;
+            float: right;
+            height: 41px;
+        }
+        .bar7 input:focus {
+            width: 300px;
+        }
+        .bar7 button {
+            height: 41px;
+            width: 41px;
+            border-radius: 23%;
+            background-color: white;
+            float: right;
+        }
+        .bar7 button:before{
+            content: "\f002";
+            font-family: FontAwesome;
+            color: #324b4e;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-container layui-bg-gray" style="padding-bottom:3px;background-image: url(static/images/content.jpg)!important;background-size: cover !important;background-repeat: no-repeat!important;">
+    <ul class="layui-nav" lay-filter="">
+        <li class="layui-nav-item"><a id="display" href="#"><i class="layui-icon layui-icon-list"></i>职位信息展示</a></li>
+        <li class="layui-nav-item"><a id="online" href="#"><i class="layui-icon">&#xe608;</i>在线爬取</a></li>
+        <li class="layui-nav-item"><a id="distribute"><i class="layui-icon layui-icon-release"></i>工资分布</a></li>
+        <li class="layui-nav-item"><a id="map" href="#"><i class="layui-icon layui-icon-location"></i> 公司分布位置</a>
+        </li>
+        <li class="layui-nav-item"><a id="word" href="#"><span class="iconfont icon-remen"></span>热词统计</a></li>
+        <li class="layui-nav-item"><a id="exprirence" href="#">网站开发历程<i class="layui-icon layui-icon-website"></i></a></li>
+        <li class="layui-nav-item help"><a href="#"><span class="iconfont icon-help"></span>帮助</a></li>
+        <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传ZP_STOKEN</button>
+    </ul>
+    <div class="container-positions layui-anim layui-anim-scale">
+        <h1 style="text-align: center;font-family: 仿宋;"><span class="iconfont icon-display"></span>岗位爬取信息展示<span class="layui-badge"></span></h1>
+        <form id="info-select" onsubmit="return false" class="layui-form" style="width: 470px;position:relative;left: 32%;">
+        </form>
+        <div style="padding: 20px; background-color: #f0;">
+            <div class="layui-row layui-col-space15" style="height: 400px;overflow-y: scroll">
+            </div>
+        </div>
+        <div id="pos-page" class="layui-layer-page" style="text-align: center"></div>
+    </div>
+    <div class="container-online layui-anim layui-anim-fadein" style="display: none;height: 538px;">
+        <h1 style="text-align: center" class="layui-bg-black"><span class="iconfont icon-online"></span>岗位爬取</h1>
+        <hr>
+        <img src="static/images/spider-man.png" class="spider-man">
+        <form id="form-submit" class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">岗位关键词</label>
+                <div class="layui-input-block">
+                    <input type="text" name="keyWord" required  lay-verify="required" placeholder="请输入爬取岗位" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">地区</label>
+                <div class="layui-input-block">
+                    <select name="city" lay-verify="required">
+                        <option value=""></option>
+                        <option value="北京">北京</option>
+                        <option value="上海">上海</option>
+                        <option value="广州">广州</option>
+                        <option value="深圳">深圳</option>
+                        <option value="杭州">杭州</option>
+                        <option value="天津">天津</option>
+                        <option value="西安">西安</option>
+                        <option value="苏州">苏州</option>
+                        <option value="武汉">武汉</option>
+                        <option value="厦门">厦门</option>
+                        <option value="长沙">长沙</option>
+                        <option value="成都">成都</option>
+                        <option value="郑州">郑州</option>
+                        <option value="重庆">重庆</option>
+                        <option value="福州">福州</option>
+                        <option value="贵阳">贵阳</option>
+                        <option value="桂林">桂林</option>
+                        <option value="佛山">佛山</option>
+                        <option value="漳州">漳州</option>
+                    </select>
+                </div>
+            </div><div class="layui-form-item">
+            <label class="layui-form-label">工资</label>
+            <div class="layui-input-block">
+                <select name="salary">
+                    <option value=""></option>
+                    <option value="3K以下">3K以下</option>
+                    <option value="3-5K">3-5K</option>
+                    <option value="5-10K">5-10K</option>
+                    <option value="10-15K">10-15K</option>
+                    <option value="15-20K">15-20K</option>
+                    <option value="20-30K">20-30K</option>
+                </select>
+           </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="addpos"><i class="layui-icon">&#xe654;</i>立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary layui-btn-normal" style="position: relative;left: 75%;"><i class="layui-icon">&#xe9aa;</i>重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="container-distribute layui-anim layui-anim-scale" style="display:none ;height: 538px;">
+        <div class="search bar7">
+            <form id="data-search" onsubmit="return false;">
+                <input type="text" name="keyWord" placeholder="请输入您要搜索的内容..." style="text-align: center;">
+                <button type="submit" id="search-submit"></button>
+            </form>
+        </div>
+        <div id="salary-area" style="display:none;border-radius:5%;width: 600px;height: 375px;top: 14%;left: 21%;background-color: rgba(0,0.5,1,0.5)!important;"></div>
+    </div>
+    <div class="container-map layui-anim layui-anim-scaleSpring" style="display:none">
+        <div id="container" style="position: relative; top: -6px; height: 517px;z-index: 10;"></div>
+    </div>
+    <div class="container-word" style="display:none">
+        <div id="word_div" style="width: 1137px; height: 564px; border: 1px solid rgb(255, 204, 153);"></div>
+    </div>
+    <div class="container-exprirence layui-anim layui-anim-upbit " style="display:none">
+        <ul class="layui-timeline" style="height: 500px;overflow-y: scroll">
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年1月26日~2021年2月5日</h3>
+                    <p>
+                        layui网站部署及相关模块的实现
+                        <br>职位展示信息的
+                        <br>在线爬取的提交加载至后台，对相关字段保存，实时更新已有字段的岗位信息持久化
+                        <br>工资分布
+                        <br>公司分布位置
+                        <br>热词统计等
+                    </p>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年1月22日~2021年1月25日</h3>
+                    <p>
+                        进行对后台的开发：
+                        <br>相关招聘网站页面的分析，字段解析，目的网址内容的爬取
+                        <br>项目的架构、爬虫数据获取的编写
+                        <br>layui的整合
+                    </p>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年1月21日</h3>
+                    <p>
+                        需求分析阶段和数据表的设计
+                        <br>对于我们求职者最关心的几个问题，我们进行了一些数据表设计，包括职位、地区、薪资、链接、职位描述、公司规模、公司成立时间,工作年限，实现了三张表的简单设计
+                    </p>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年1月20日</h3>
+                    <p>
+                        背景：今年即将毕业的我，为了更好的进入适合自己岗位的招聘公司，本人对一些招聘网站进行了岗位数据抓取，且进行相关数据分析，目的是为我们求职者能够更好的找到自己心仪的岗位。
+                        <br>1.本人郑重承诺，该项目仅仅用于技术学习交流使用，请勿用做商业用途，违者后果自负。
+                        <br>2.该项目用于技术交流，若侵权请联系我：https://github.com/Lilymz
+                        <br>3.开发技术：SpringBoot+Mybatis+MongoDB+Mysql8.0.23+Jsoup+HttpClient+Selenium+Nashorn引擎
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<input type="hidden" class="data-count" value="">
+</body>
+</html>
