@@ -1,4 +1,4 @@
-[查看演示](http://www.webappxin.com/)
+[查看演示](http://www.webappxin.com/)只做了面向PC端的页面,非响应式的,手机端浏览起来会有点奇怪
 
 ## 技术栈
 
