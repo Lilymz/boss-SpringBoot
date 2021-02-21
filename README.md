@@ -35,23 +35,23 @@
 
 ### **首页**
 
-![image-20210221173622561](.\img\index.png)
+![Index](Img/index.png)
 
 ### **在线爬取**
 
-![image-20210221173731888](.\img\online.png)
+![online](Img/online.png)
 
 ### **工资数据地区可视化**
 
-![image-20210221173803600](.\img\see.png)
+![see](Img/see.png)
 
 ### 某职位公司位置
 
-![image-20210221173950980](.\img\position.png)
+![positions](Img/position.png)
 
 ### 热词统计
 
-![image-20210221174015635](.\img\hot.png)
+![hot](Img/hot.png)
 
 ## 尾言自述
 
