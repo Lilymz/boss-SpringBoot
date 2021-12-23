@@ -47,11 +47,11 @@
 
 ### 某职位公司位置
 
-![positions](Img/position.png)
+![positions](/Img/position.png)
 
 ### 热词统计
 
-![hot](Img/hot.png)
+![hot](../Img/hot.png)
 
 ## 尾言自述
 
