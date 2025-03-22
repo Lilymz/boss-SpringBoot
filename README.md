@@ -1,10 +1,8 @@
-[查看演示](http://www.webappxin.com:18098/)只做了面向PC端的页面,非响应式的,手机端浏览起来会有点奇怪
-
 ## 技术栈
 
-### 前端：jQuery+map.baidu+Encharts+jQCloud+layui
+### 前端：jQuery,map.baidu+Encharts,jQCloud,layui
 
-### 后端：SpringBoot+Mysql8.23+Thymeleaf+Mongodb+Mybatis+PageHelper+HttpClient&Jsoup+selenium
+### 后端：SpringBoot,Mysql8.23,Thymeleaf,Mongodb,Mybatis,PageHelper,Jsoup,selenium
 
 ## 网站分析
 
